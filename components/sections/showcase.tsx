@@ -2,77 +2,123 @@
 
 import { motion } from "framer-motion"
 import { FadeIn } from "@/components/ui/fade-in"
+import { cn } from "@/lib/utils"
+
+type Startup = {
+  name: string
+  badge: string
+  stat: string
+  img: string
+  /** Logo well background when the asset needs separation from the card chrome. */
+  logoWellClassName?: string
+  /** When set, logo is capped smaller than the inner square so it sits inside the well (Tailwind classes). */
+  logoImgClassName?: string
+}
+
+/** Square portfolio tile — logo centered in a clear 1:1 well, facts in a footer band. */
+function StartupSquareCard({
+  startup,
+  index,
+}: {
+  startup: Startup
+  index: number
+}) {
+  return (
+    <motion.article
+      className={cn(
+        "group flex aspect-square flex-col overflow-hidden rounded-2xl border border-slate-6 bg-slate-1 shadow-[0_16px_48px_-20px_rgb(0_0_0_/_0.35)] transition-shadow duration-300",
+        "hover:border-slate-7 hover:shadow-[0_20px_56px_-18px_rgb(0_0_0_/_0.42)]"
+      )}
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.45, delay: 0.04 + index * 0.05, ease: "easeOut" }}
+    >
+      <div
+        className={cn(
+          "relative flex min-h-0 flex-1 items-center justify-center p-5 sm:p-6",
+          "border-b border-slate-6",
+          startup.logoWellClassName ?? "bg-gradient-to-br from-slate-2 via-slate-2 to-slate-3 dark:from-slate-2 dark:via-slate-3 dark:to-slate-4"
+        )}
+      >
+        <div className="relative flex aspect-square w-full max-w-[min(100%,11rem)] items-center justify-center sm:max-w-[min(100%,13rem)]">
+          <img
+            src={startup.img || "/placeholder.svg"}
+            alt={`${startup.name} logo`}
+            className={cn(
+              "object-contain transition-transform duration-500 ease-out group-hover:scale-[1.04]",
+              startup.logoImgClassName ? cn("h-auto w-auto", startup.logoImgClassName) : "h-full w-full"
+            )}
+            draggable={false}
+          />
+        </div>
+      </div>
+
+      <div className="flex shrink-0 flex-col justify-center gap-1 px-4 py-3 sm:gap-1.5 sm:px-4 sm:py-3.5">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-10 sm:text-[11px]">
+          {startup.badge}
+        </span>
+        <h3 className="truncate text-base font-semibold tracking-tight text-slate-12 sm:text-lg">{startup.name}</h3>
+        <p className="line-clamp-3 text-xs leading-snug text-slate-10 sm:text-sm sm:leading-snug">{startup.stat}</p>
+      </div>
+    </motion.article>
+  )
+}
 
 export function ShowcaseSection() {
-  const startups = [
+  const startups: Startup[] = [
     {
       name: "Leprendo",
       badge: "Seed",
       stat: "250K+ in Grants",
       img: "/leprendo.jpg",
+      logoImgClassName: "max-h-[70%] max-w-[70%]",
     },
     {
       name: "OOTify",
       badge: "Seed",
       stat: "Backed by Nex Cubed, IBOS Venture, Titan Angels, & more",
       img: "/ootify.png",
+      logoImgClassName: "max-h-[68%] max-w-[88%]",
     },
     {
       name: "Clayzo",
       badge: "Pre-Seed",
       stat: "Backed by Afore Capital",
       img: "/logo-no-bg.png",
-      imageFit: "contain",
-      imageShellClassName: "bg-[#f5ebe0]",
+      logoWellClassName: "bg-[#f5ebe0]",
+      logoImgClassName: "max-h-[62%] max-w-[62%]",
     },
     {
       name: "Magma",
       badge: "Series A",
       stat: "Backed by General Catalyst, Titan Capital, Accion Venture Lab, Capria Ventures, & more",
       img: "/magma.jpg",
+      logoImgClassName: "max-h-[70%] max-w-[70%]",
     },
   ]
 
   return (
-    <section id="startups" className="py-16 md:py-24 px-5">
-      <div className="max-w-6xl mx-auto">
+    <section id="startups" className="relative overflow-hidden px-5 py-16 md:py-24">
+      <div
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_60%_at_50%_-10%,rgb(30_58_138_/_0.12),transparent_55%),radial-gradient(ellipse_70%_50%_at_100%_50%,rgb(99_102_241_/_0.06),transparent_50%)]"
+        aria-hidden
+      />
+
+      <div className="relative mx-auto max-w-7xl">
         <FadeIn>
-          <div className="text-center space-y-4 mb-14">
-            <h2 className="text-4xl sm:text-5xl font-medium text-slate-12 tracking-tight">Startups</h2>
-            <p className="text-slate-11 text-lg">Wins from the community—built at UCI, launched to the world.</p>
+          <div className="mb-10 text-center md:mb-12">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-10">Portfolio</p>
+            <h2 className="mt-3 text-3xl font-medium tracking-tight text-slate-12 sm:text-4xl md:text-5xl">Startups</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-11 md:text-lg">
+              Wins from the community—built at UCI, launched to the world.
+            </p>
           </div>
         </FadeIn>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6 md:gap-8">
+        <div className="mx-auto grid w-full max-w-5xl grid-cols-2 gap-3 sm:max-w-none sm:gap-5 lg:mx-0 lg:max-w-7xl lg:grid-cols-4 lg:gap-5">
           {startups.map((s, i) => (
-            <motion.div
-              key={s.name}
-              className={`group overflow-hidden rounded-2xl border border-slate-6 bg-slate-1`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.05 }}
-              whileHover={{ scale: 1.01 }}
-            >
-              <div className={`relative aspect-[5/4] overflow-hidden ${s.imageShellClassName || ""}`}>
-                <motion.img
-                  src={s.img || "/placeholder.svg"}
-                  alt={`${s.name} product`}
-                  className={`w-full h-full ${s.imageFit === "contain" ? "object-contain p-8 sm:p-10" : "object-cover"}`}
-                  whileHover={{ scale: 1.06 }}
-                  transition={{ duration: 0.6 }}
-                />
-                <div className="absolute top-3 left-3 px-2.5 py-1 text-xs rounded-full bg-slate-12 text-slate-1">
-                  {s.badge}
-                </div>
-              </div>
-              <div className="p-7 md:p-8">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-3">
-                  <h3 className="text-xl font-medium text-slate-12 group-hover:text-slate-11">{s.name}</h3>
-                  <span className="text-sm md:text-base text-slate-10 md:text-right leading-snug break-words">{s.stat}</span>
-                </div>
-              </div>
-            </motion.div>
+            <StartupSquareCard key={s.name} startup={s} index={i} />
           ))}
         </div>
       </div>

@@ -2,7 +2,6 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 
 // Constants for sizing
@@ -22,12 +21,15 @@ export const NavbarLink = ({
   isActive?: boolean
   onSelect?: (href: string) => void
 }) => {
-  const pathname = usePathname()
   return (
     <Link
       href={href}
-      className={`relative text-sm font-medium py-1 px-3 transition-colors duration-200 text-slate-12 w-[90px] flex items-center justify-center
-        ${isActive ? 'opacity-100' : 'opacity-30 hover:opacity-60'}`}
+      className={`relative z-[1] flex w-[90px] items-center justify-center px-3 py-1 text-sm transition-all duration-200 ease-out
+        ${
+          isActive
+            ? "font-bold text-[#0a1628]"
+            : "font-medium text-[#64748b] hover:text-[#334155] hover:-translate-y-px"
+        }`}
       onClick={() => onSelect?.(href)}
     >
       {children}
@@ -41,7 +43,7 @@ export const NavbarLinkBackground = ({ activeIndex }: { activeIndex: number }) =
   return (
     <div
       className={clsx(
-        'absolute transition-all duration-200 ease-in-out h-7 rounded-full bg-slate-3'
+        "absolute transition-all duration-200 ease-out h-7 rounded-full manifest-nav-pill-active"
       )}
       style={{
         width: `90px`,

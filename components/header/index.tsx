@@ -1,7 +1,6 @@
 "use client"
 import { NavbarLink, NavbarLinkBackground } from "./link"
 import { useState, useMemo, useEffect } from "react"
-import clsx from "clsx"
 
 export const Header = () => {
   const navbar = {
@@ -34,14 +33,8 @@ export const Header = () => {
 
   return (
     <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 hidden md:block">
-      <nav className="bg-slate-1/80 backdrop-blur-md rounded-full border border-slate-6">
-        <div
-          className={clsx(
-            "bg-slate-1/80 backdrop-blur-md rounded-full p-1 flex relative items-center",
-            "shadow-[0px_-1px_3px_0px_rgba(0,_0,_0,_0.05),_0px_7px_2px_0px_rgba(0,_0,_0,_0.02),_0px_4px_2px_0px_rgba(0,_0,_0,_0.05),_0px_2px_1px_0px_rgba(0,_0,_0,_0.05),_0px_1px_1px_0px_rgba(0,_0,_0,_0.03),_0px_0px_1px_0px_rgba(0,_0,_0,_0.04)]",
-            "dark:shadow-[0px_-1px_3px_0px_rgba(0,_0,_0,_0.03),_0px_7px_2px_0px_rgba(0,_0,_0,_0.03),_0px_4px_2px_0px_rgba(0,_0,_0,_0.05),_0px_2px_1px_0px_rgba(0,_0,_0,_0.1),_0px_1px_1px_0px_rgba(0,_0,_0,_0.1),_0px_0px_1px_0px_rgba(0,_0,_0,_0.1)]",
-          )}
-        >
+      <nav className="manifest-nav-shell p-0.5">
+        <div className="manifest-nav-inner relative flex items-center">
           <NavbarLinkBackground activeIndex={activeIndex} />
           {navbar.items.map(({ href, _title }) => (
             <NavbarLink key={href} href={href} isActive={href === activeHref} onSelect={setActiveHref}>

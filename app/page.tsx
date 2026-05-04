@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { HomePageWrapper } from "@/components/home-page-wrapper"
 import { Header } from "@/components/header"
 // import { ApplyCTA } from "@/components/apply-cta"
 import { HeroSection } from "@/components/sections/hero"
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   return (
-    <div className="min-h-screen">
+    <HomePageWrapper>
       <Header />
       {/* <ApplyCTA /> */}
 
@@ -46,6 +47,6 @@ export default async function Page() {
       {/* <FAQSection /> */}
 
       <Footer />
-    </div>
+    </HomePageWrapper>
   )
 }

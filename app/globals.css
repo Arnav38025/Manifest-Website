@@ -108,3 +108,176 @@ body:has(html:not(:last-child)) {
   --gradient-color-3: #0066ff;
   --gradient-color-4: #003d82;
 }
+
+/* Floating pill navbar — gold active state (rest of site uses default slate / dark theme) */
+:root {
+  --nav-gold: 212 164 42;
+  --nav-gold-bright: 236 201 75;
+}
+
+@layer components {
+  .manifest-nav-shell {
+    border-radius: 9999px;
+    border: 1px solid rgb(var(--slate-6) / 0.85);
+    background: rgb(255 255 255 / 0.9);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    box-shadow:
+      0 8px 32px -8px rgb(0 0 0 / 0.25),
+      0 1px 0 rgb(255 255 255 / 0.95) inset;
+  }
+
+  .manifest-nav-inner {
+    border-radius: 9999px;
+    padding: 0.25rem;
+    display: flex;
+    position: relative;
+    align-items: center;
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.06);
+  }
+
+  .manifest-nav-pill-active {
+    border-radius: 9999px;
+    background: linear-gradient(
+      165deg,
+      rgb(var(--nav-gold-bright)) 0%,
+      rgb(var(--nav-gold)) 100%
+    );
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.4) inset,
+      0 4px 14px rgb(212 164 42 / 0.4);
+  }
+
+  /* Our Community in Action — dual infinite marquees */
+  @keyframes events-marquee-left {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @keyframes events-marquee-right {
+    from {
+      transform: translate3d(-50%, 0, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .events-marquee-row {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    border: 1px solid rgb(var(--slate-6) / 0.95);
+    background: rgb(var(--slate-1) / 0.92);
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.06) inset,
+      0 12px 40px -18px rgb(0 0 0 / 0.35);
+  }
+
+  .events-marquee-row::before,
+  .events-marquee-row::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 3.5rem;
+    pointer-events: none;
+  }
+
+  .events-marquee-row::before {
+    left: 0;
+    background: linear-gradient(90deg, rgb(var(--slate-1)) 0%, transparent 100%);
+  }
+
+  .events-marquee-row::after {
+    right: 0;
+    background: linear-gradient(270deg, rgb(var(--slate-1)) 0%, transparent 100%);
+  }
+
+  @media (min-width: 768px) {
+    .events-marquee-row::before,
+    .events-marquee-row::after {
+      width: 5rem;
+    }
+  }
+
+  .events-marquee-track {
+    display: flex;
+    width: max-content;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    .events-marquee-track {
+      gap: 1.25rem;
+    }
+  }
+
+  .events-marquee-track--left {
+    animation: events-marquee-left 78s linear infinite;
+  }
+
+  .events-marquee-track--right {
+    animation: events-marquee-right 92s linear infinite;
+  }
+
+  .events-marquee-row:hover .events-marquee-track--left,
+  .events-marquee-row:hover .events-marquee-track--right {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .events-marquee-track--left,
+    .events-marquee-track--right {
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+
+  /* Shared drifting gradient animation (hero mesh only; board uses static bg in component). */
+  @keyframes board-aurora-shift {
+    0%,
+    100% {
+      background-position: 0% 40%;
+    }
+    50% {
+      background-position: 100% 60%;
+    }
+  }
+
+  .board-aurora-layer {
+    background-size: 240% 240%;
+    animation: board-aurora-shift 22s ease-in-out infinite;
+  }
+
+  /* Home hero — CSS-only moving gradients (replaces fullscreen WebGL during scroll). */
+  .hero-mesh-a {
+    background-size: 240% 240%;
+    animation: board-aurora-shift 20s ease-in-out infinite;
+  }
+
+  .hero-mesh-b {
+    background-size: 280% 280%;
+    animation: board-aurora-shift 32s ease-in-out infinite;
+    animation-delay: -8s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-mesh-a,
+    .hero-mesh-b {
+      animation: none !important;
+    }
+
+    .hero-mesh-a,
+    .hero-mesh-b {
+      background-position: 50% 50% !important;
+    }
+  }
+}

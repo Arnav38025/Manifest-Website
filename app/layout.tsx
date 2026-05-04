@@ -2,7 +2,6 @@ import type React from "react"
 import type { Viewport, Metadata } from "next"
 import { Geist } from "next/font/google"
 import { Providers } from "@/context"
-import { MeshGradientComponent } from "@/components/mesh-gradient"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -23,7 +22,7 @@ export const metadata: Metadata = {
       { url: "/Manifest Logo.png", type: "image/png" },
     ],
   },
-  generator: 'v0.dev',
+  generator: "v0.dev",
 }
 
 export default async function RootLayout({
@@ -31,39 +30,17 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  // Darker blue colors for a more sophisticated look
-  const darkBlueColors = [
-    "#0a1628", // Very dark navy
-    "#1e3a8a", // Dark blue
-    "#1e40af", // Medium dark blue
-    "#0f172a", // Almost black navy
-  ]
-
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased max-w-screen min-h-svh bg-slate-1 text-slate-12`}>
+      <body
+        className={`${geistSans.className} min-h-svh max-w-screen bg-gradient-to-b from-[#0a1628] via-slate-12 to-[#020617] text-slate-12 antialiased`}
+      >
         <Providers defaultTheme="dark" forcedTheme="dark">
-          <MeshGradientComponent
-            colors={darkBlueColors}
-            speed={2.5}
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              zIndex: 0,
-              width: "100%",
-              height: "100%",
-            }}
-          />
-          <div className="w-full relative z-[1] flex flex-col min-h-screen">
-            <div className="w-full flex flex-col flex-1">
-              <main className="flex-1">{children}</main>
-            </div>
+          <div className="relative flex min-h-screen w-full flex-col">
+            <main className="flex-1">{children}</main>
           </div>
         </Providers>
       </body>
     </html>
   )
 }
-
-// removed duplicate metadata export

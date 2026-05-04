@@ -1,5 +1,6 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { useTransition, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { addAdminComment, setAdminSelection } from "@/app/admin/actions"
@@ -138,7 +139,7 @@ export function AdminAppDetail({
   )
 }
 
-function Row({ k, v, multiline }: { k: string; v: string; multiline?: boolean }) {
+function Row({ k, v, multiline }: { k: string; v: ReactNode; multiline?: boolean }) {
   return (
     <div className="grid grid-cols-3 gap-3 text-sm">
       <div className="text-slate-10">{k}</div>

@@ -1,157 +1,372 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
+import { useMemo, useState } from "react"
 import { FadeIn } from "@/components/ui/fade-in"
-import { Linkedin, Twitter, Github, Mail } from 'lucide-react'
+import { ChevronDown, Github, Instagram, Linkedin, Mail, Twitter } from "lucide-react"
+import { cn } from "@/lib/utils"
 
-export function BoardSection() {
-  const boardMembers = [
-    {
-      name: "Shouryaa Sharma",
-      role: "President",
-      year: "Junior",
-      major: "Computer Science",
-      bio: "",
-      image: "/shouryaa.jpeg",
-      socials: {
-        linkedin: "https://www.linkedin.com/in/shouryaasharma",
-      },
-      achievements: ["Partner at Crater Ventures", "Investments Analyst @ Newport Capital"],
-    },
-    {
-      name: "Ariyana Abraham",
-      role: "Vice President",
-      year: "Junior",
-      major: "Business Administration",
-      bio: "",
-      image: "/ariyana.jpeg",
-      socials: {
-        linkedin: "https://www.linkedin.com/in/ariyanaabraham",
-      },
-      achievements: ["VP of Finance @ MUSA and UCI Rocket"],
-    },
-    {
-      name: "Connor Ruffalo",
-      role: "VP of Finance",
-      year: "Senior",
-      major: "Business Economics",
-      bio: "",
-      image: "/connor.jpeg",
-      socials: {
-        linkedin: "https://www.linkedin.com/in/cruffalo",
-      },
-      achievements: ["Co-Founder @ CAPCASE", "Project Manager @ UCI Rocket"],
-    },
-    {
-      name: "Meera Phadnis",
-      role: "Co-VP of Marketing",
-      year: "Sophomore",
-      major: "",
-      bio: "",
-      image: "/meera.jpeg",
-      socials: {
-        linkedin: "https://www.linkedin.com/in/meeraphadnis",
-      },
-      achievements: ["Marketing @ First Tech Challenge"],
-    },
-    {
-      name: "Noah Chie",
-      role: "Co-VP of External",
-      year: "Sophomore",
-      major: "Biomedical Engineering",
-      bio: "",
-      image: "/noah.jpeg",
-      socials: {
-        linkedin: "https://www.linkedin.com/in/noah-chie",
-      },
-      achievements: ["R&D Engineer Intern @ Vena Vitals (YC S20)", "Operations Engineer @ UCI Rocket"],
-    },
-    {
-      name: "Janani Prasad",
-      role: "VP of Communications",
-      year: "Junior",
-      major: "Computer Science",
-      bio: "",
-      image: "/janani.jpeg",
-      socials: {
-        linkedin: "https://www.linkedin.com/in/jananiprasad8",
-      },
-      achievements: ["Co-Founder @ Clayzo", "Software Engineer Intern @ Fortive ASP"],
-    },
-    {
-      name: "Purav Patel",
-      role: "VP of Technology",
-      year: "Junior",
-      major: "Computer Science and Engineering",
-      bio: "",
-      image: "/purav.jpeg",
-      socials: {
-        linkedin: "https://www.linkedin.com/in/puravp05",
-      },
-      achievements: ["Co-Founder @ Clayzo", "Technical Product Manager Intern @ First American"],
-    },
+type Member = {
+  name: string
+  role: string
+  year: string
+  major: string
+  bio: string
+  image: string
+  socials: Record<string, string>
+  achievements: string[]
+}
 
-    {
-      name: "Braden Ransom",
-      role: "VP of Internal Affairs",
-      year: "Senior",
-      major: "Informatics",
-      bio: "",
-      image: "/brady.jpeg",
-      socials: {
-        linkedin: "https://www.linkedin.com/in/brady-ransom",
-      },
-      achievements: ["Campus Partner @ Perplexity","VP of Risk Management @ NIC & Sigma Chi"],
+const NEW_BOARD_HEADSHOTS: Record<string, string> = {
+  "Meera Phadnis": "/newBoard/meera.jpeg",
+  "Meher Dhingra": "/newBoard/Meher.jpg",
+  "Cozette Lessor": "/newBoard/cozy.jpeg",
+  "Isabella Carrillo": "/newBoard/Isabella.JPG",
+  "Hanna Hu": "/newBoard/hanna.jpeg",
+  "Arnav Saharan": "/newBoard/Arnav.jpg",
+  "Sahil Kulkarni": "/newBoard/sahil.jpeg",
+  "Brandon Yee": "/newBoard/brandon.jpeg",
+  "Aurelio Metta": "/newBoard/aurelio.jpeg",
+}
+
+/** Prefer `public/newBoard/*` for current board photos, fallback to legacy root image. */
+function boardHeadshot(fullName: string): string {
+  const mapped = NEW_BOARD_HEADSHOTS[fullName]
+  if (mapped) return mapped
+  const first = fullName.trim().split(/\s+/)[0]?.toLowerCase() ?? "placeholder"
+  return `/${first}.jpeg`
+}
+
+
+
+const leadershipMembers: Member[] = [
+  {
+    name: "Meera Phadnis",
+    role: "President",
+    year: "Sophomore",
+    major: "Data Science, Economics",
+    bio: "",
+    image: boardHeadshot("Meera Phadnis"),
+    socials: {
+      linkedin: "https://www.linkedin.com/in/meeraphadnis",
     },
-    {
-      name: "Sri Gubbala",
-      role: "Co-VP of External",
-      year: "Senior",
-      major: "CS + BIM",
-      bio: "",
-      image: "/sri.jpeg",
-      socials: {
-        linkedin: "https://www.linkedin.com/in/sriharshini-gubbala-283740246",
-      },
-      achievements: ["APM @ ZotSun", "Team Lead @ CubeSat UCI"],
+    achievements: [
+      "Former VP of Marketing",
+      "Hackathon Winner",
+      "Intern @ CARPE-Ecosattva",
+      "Undergraduate Researcher @ UCI",
+      "Currently building in stealth",
+    ],
+  },
+  {
+    name: "Cozette Lessor",
+    role: "Vice President",
+    year: "Freshman",
+    major: "Pre-Law",
+    bio: "",
+    image: boardHeadshot("Cozette Lessor"),
+    socials: {
+      linkedin: "https://www.linkedin.com/in/cozette-lessor",
     },
-  ]
+    achievements: [
+      "Founder of Covered Girl",
+      "Founder of Airbnb Arbitrage Business",
+      "Serial Entrepreneur",
+      "Pre-Law @ UCI",
+      "VP @ Manifest",
+    ],
+  },
+  {
+    name: "Meher Dhingra",
+    role: "VP of Finance",
+    year: "Freshman",
+    major: "Economics",
+    bio: "",
+    image: boardHeadshot("Meher Dhingra"),
+    socials: {
+      linkedin: "https://www.linkedin.com/in/meherdhingra/",
+    },
+    achievements: [
+      "Co-VP of Marketing @ Venture Capital Society",
+      "Building in Fintech",
+      "Prev Intern @ TimeZone",
+      "Prev Intern @ Limited Edt",
+    ],
+  },
+]
+
+const archivedMembers: Member[] = [
+  {
+    name: "Isabella Carrillo",
+    role: "VP of Marketing",
+    year: "Sophomore",
+    major: "Business Administration, Emphasis in Finance",
+    bio: "",
+    image: boardHeadshot("Isabella Carrillo"),
+    socials: {
+      linkedin: "https://www.linkedin.com/in/isabella-carrillo-22ab41391",
+    },
+    achievements: ["Intern @ Northwestern Mutual", "Intern @ Modern Woodmen"],
+  },
+  {
+    name: "Hanna Hu",
+    role: "VP of Communications",
+    year: "Freshman",
+    major: "Electrical Engineering, Minor in Biomedical Engineering",
+    bio: "",
+    image: boardHeadshot("Hanna Hu"),
+    socials: {
+      linkedin: "https://www.linkedin.com/in/hannajhu",
+    },
+    achievements: [
+      "Science Life-Detection Engineering @ Legacy Robotics",
+      "Currently building Scrivia.health",
+    ],
+  },
+  {
+    name: "Arnav Saharan",
+    role: "VP of Technology",
+    year: "Sophomore",
+    major: "Computer Science",
+    bio: "",
+    image: boardHeadshot("Arnav Saharan"),
+    socials: {
+      linkedin: "https://www.linkedin.com/in/arnav-saharan-b94967211/",
+    },
+    achievements: ["Currently building Krumbit", "Software Analyst @ Goldman Sachs"],
+  },
+  {
+    name: "Sahil Kulkarni",
+    role: "VP of External",
+    year: "Sophomore",
+    major: "Computer Engineering",
+    bio: "",
+    image: boardHeadshot("Sahil Kulkarni"),
+    socials: {
+      linkedin: "https://www.linkedin.com/in/sahil-kulkarni",
+    },
+    achievements: [
+      "Previous intern of marketing",
+      "Design and pitch competition runner-up",
+      "Currently building in tech",
+    ],
+  },
+  {
+    name: "Brandon Yee",
+    role: "Co-VP of Internal",
+    year: "Sophomore",
+    major: "CS + BIM",
+    bio: "",
+    image: boardHeadshot("Brandon Yee"),
+    socials: {
+      linkedin:
+        "https://www.linkedin.com/in/brandon-yee-5b4618324?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
+    },
+    achievements: ["APM @ ZotSun", "Team Lead @ CubeSat UCI"],
+  },
+  {
+    name: "Aurelio Metta",
+    role: "Co-VP of Internal",
+    year: "Freshman",
+    major: "Business Administration + Psychology",
+    bio: "",
+    image: boardHeadshot("Aurelio Metta"),
+    socials: {
+      linkedin: "https://www.linkedin.com/in/aureliometta",
+    },
+    achievements: [
+      "ItalianVisa Project Manager",
+      "PROTOTYPE Co-Founder",
+      "Indigo TCG Founder | 6-fig value @ 14y/o",
+      "ThoughtCentral Founder | 300k TikTok",
+    ],
+  },
+]
+
+function socialHref(url: string) {
+  return url.startsWith("http") ? url : `https://${url}`
+}
+
+function MemberCard({
+  member,
+  index,
+  expanded,
+  onToggle,
+}: {
+  member: Member
+  index: number
+  expanded: boolean
+  onToggle: () => void
+}) {
+  const hasAchievements = member.achievements.length > 0
 
   const getSocialIcon = (platform: string) => {
     switch (platform) {
       case "linkedin":
-        return <Linkedin className="w-4 h-4" />
+        return <Linkedin className="h-5 w-5" />
       case "twitter":
-        return <Twitter className="w-4 h-4" />
+        return <Twitter className="h-5 w-5" />
       case "github":
-        return <Github className="w-4 h-4" />
+        return <Github className="h-5 w-5" />
       case "email":
-        return <Mail className="w-4 h-4" />
+        return <Mail className="h-5 w-5" />
+      case "instagram":
+        return <Instagram className="h-5 w-5" />
       default:
         return null
     }
   }
 
   return (
-    <section id="board" className="py-16 md:py-24 px-5 bg-slate-2 relative overflow-hidden">
-      {/* Background decoration */}
-      <motion.div
-        className="absolute top-20 left-20 w-40 h-40 bg-slate-4/10 rounded-full blur-3xl"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.2, 0.4, 0.2],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
-        }}
+    <motion.div
+      className={cn(
+        "group relative z-0 cursor-default overflow-hidden rounded-3xl border border-slate-6 bg-slate-1 p-6 transition-all duration-300 md:p-8",
+        hasAchievements && "cursor-pointer hover:border-slate-8"
+      )}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: index * 0.05, ease: "easeOut" }}
+      viewport={{ once: true }}
+      role={hasAchievements ? "button" : undefined}
+      tabIndex={hasAchievements ? 0 : undefined}
+      aria-expanded={hasAchievements ? expanded : undefined}
+      whileHover={{
+        scale: 1.02,
+        boxShadow: "0 20px 40px rgba(0,0,0,0.12)",
+      }}
+      onClick={() => {
+        if (!hasAchievements) return
+        onToggle()
+      }}
+      onKeyDown={(e) => {
+        if (!hasAchievements) return
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          onToggle()
+        }
+      }}
+    >
+      <div className="relative z-[1] mb-5 md:mb-6">
+        <motion.div
+          className="mx-auto h-40 w-40 overflow-hidden rounded-2xl bg-slate-3 md:h-44 md:w-44 lg:h-48 lg:w-48"
+          whileHover={{ scale: 1.06, rotate: 3 }}
+          transition={{ duration: 0.3 }}
+        >
+          <img
+            src={member.image || "/placeholder-user.jpg"}
+            alt={member.name}
+            className="h-full w-full object-cover"
+          />
+        </motion.div>
+      </div>
+
+      <div className="relative z-[1] space-y-3 text-center">
+        <div>
+          <div className="flex items-center justify-center gap-1">
+            <h3 className="text-xl font-medium text-slate-12 transition-colors group-hover:text-slate-11 md:text-2xl">
+              {member.name}
+            </h3>
+            {hasAchievements ? (
+              <ChevronDown
+                className={cn(
+                  "h-4 w-4 shrink-0 text-slate-10 transition-transform duration-200",
+                  expanded && "rotate-180"
+                )}
+                aria-hidden
+              />
+            ) : null}
+          </div>
+          <p className="text-base font-medium text-slate-11">{member.role}</p>
+          {member.major ? <p className="mt-1.5 text-sm text-slate-10">{member.major}</p> : null}
+        </div>
+
+        {member.bio ? (
+          <p className="text-sm leading-relaxed text-slate-11 transition-colors group-hover:text-slate-10">
+            {member.bio}
+          </p>
+        ) : null}
+
+        <AnimatePresence initial={false}>
+          {expanded && hasAchievements ? (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.28, ease: [0.34, 1.56, 0.64, 1] }}
+              className="overflow-hidden"
+            >
+              <ul className="space-y-2 pt-1 text-left text-sm text-slate-10">
+                {member.achievements.map((a, i) => (
+                  <li key={`${member.name}-${i}`} className="flex gap-2">
+                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-slate-8" aria-hidden />
+                    <span>{a}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+
+        {Object.keys(member.socials).length > 0 ? (
+          <div className="flex justify-center gap-3 pt-2" onClick={(e) => e.stopPropagation()}>
+            {Object.entries(member.socials).map(([platform, url]) => (
+              <motion.a
+                key={platform}
+                href={socialHref(url)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-3 text-slate-11 transition-all duration-200 hover:bg-slate-12 hover:text-slate-1"
+                aria-label={`${member.name} on ${platform}`}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {getSocialIcon(platform)}
+              </motion.a>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </motion.div>
+  )
+}
+
+function buildLeadershipRoster(): Member[] {
+  const current = leadershipMembers.map((m) => ({ ...m, socials: { ...m.socials }, achievements: [...m.achievements] }))
+  const names = new Set(current.map((m) => m.name))
+
+  for (const arch of archivedMembers) {
+    const cur = current.find((c) => c.name === arch.name)
+    if (cur) {
+      if (!cur.major && arch.major) cur.major = arch.major
+      cur.socials = { ...cur.socials, ...arch.socials }
+      if (arch.achievements.length) cur.achievements = [...arch.achievements]
+      if (!cur.bio && arch.bio) cur.bio = arch.bio
+    }
+  }
+
+  const archivedOnly = archivedMembers.filter((a) => !names.has(a.name))
+
+  return [...current, ...archivedOnly]
+}
+
+export function BoardSection() {
+  const roster = useMemo(() => buildLeadershipRoster(), [])
+  const [openCardKey, setOpenCardKey] = useState<string | null>(null)
+
+  return (
+    <section
+      id="board"
+      className="relative overflow-hidden bg-gradient-to-b from-slate-2 via-[#09090b] to-black px-5 py-16 md:py-24"
+    >
+      <div
+        className="pointer-events-none absolute inset-0 opacity-80 bg-[radial-gradient(ellipse_100%_60%_at_50%_0%,rgb(51_65_85_/_0.18),transparent_55%)]"
+        aria-hidden
       />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="relative z-10 mx-auto max-w-7xl">
         <FadeIn>
-          <div className="text-center space-y-6 mb-20">
-            <h2 className="text-4xl sm:text-5xl font-medium text-slate-12 tracking-tight">
+          <div className="mb-10 space-y-6 text-center md:mb-12">
+            <h2 className="text-4xl font-medium tracking-tight text-slate-12 sm:text-5xl">
               Meet Our{" "}
               <motion.span
                 className="relative inline-block"
@@ -173,90 +388,19 @@ export function BoardSection() {
           </div>
         </FadeIn>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
-          {boardMembers.map((member, index) => (
-            <motion.div
-              key={member.name}
-              className={`group bg-slate-1 rounded-3xl p-5 md:p-6 border border-slate-6 hover:border-slate-8 transition-all duration-300 cursor-pointer relative overflow-hidden`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{
-                scale: 1.02,
-                boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
-              }}
-            >
-              {/* Profile Image */}
-              <div className="relative mb-4">
-                <motion.div
-                  className="w-20 h-20 mx-auto rounded-2xl overflow-hidden bg-slate-3"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <img
-                    src={member.image || "/placeholder.svg"}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
-                </motion.div>
-
-                
-              </div>
-
-              {/* Member Info */}
-              <div className="text-center space-y-3">
-                <div>
-                  <h3 className="text-lg font-medium text-slate-12 group-hover:text-slate-11 transition-colors">
-                    {member.name}
-                  </h3>
-                  <p className="text-slate-11 text-sm font-medium">{member.role}</p>
-                </div>
-
-                {member.bio && (
-                  <p className="text-sm text-slate-11 leading-relaxed group-hover:text-slate-10 transition-colors">
-                    {member.bio}
-                  </p>
-                )}
-
-                {/* Achievements hidden temporarily */}
-                {/* <div className="flex flex-wrap gap-2 justify-center">
-                  {member.achievements.map((achievement, i) => (
-                    <span key={i} className="px-3 py-1 bg-slate-12 text-slate-1 text-xs rounded-full font-medium">
-                      {achievement}
-                    </span>
-                  ))}
-                </div> */}
-
-                {/* Social Links */}
-                {Object.keys(member.socials).length > 0 && (
-                  <div className="flex justify-center gap-3 pt-2">
-                    {Object.entries(member.socials as Record<string, string>).map(([platform, url]) => (
-                      <motion.a
-                        key={platform}
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-8 h-8 bg-slate-3 hover:bg-slate-12 text-slate-11 hover:text-slate-1 rounded-full flex items-center justify-center transition-all duration-200"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        {getSocialIcon(platform)}
-                      </motion.a>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Hover gradient overlay */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-slate-12/5 to-transparent rounded-3xl pointer-events-none"
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
+        <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
+          {roster.map((member, index) => {
+            const cardKey = `${member.name}-${member.role}-${index}`
+            return (
+              <MemberCard
+                key={cardKey}
+                member={member}
+                index={index}
+                expanded={openCardKey === cardKey}
+                onToggle={() => setOpenCardKey((prev) => (prev === cardKey ? null : cardKey))}
               />
-            </motion.div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>

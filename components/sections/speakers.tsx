@@ -1,39 +1,53 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { Linkedin } from "lucide-react"
 import { FadeIn } from "@/components/ui/fade-in"
 
+type PastSpeaker = {
+  name: string
+  title: string
+  img: string
+  logo: string
+  linkedin: string
+}
+
 export function PastSpeakersSection() {
-  const speakers = [
+  const speakers: PastSpeaker[] = [
     {
       name: "Dean Stoecker",
       title: "Founder & Former CEO, Alteryx",
       img: "/dean-stoecker.jpeg",
       logo: "/alteryx-logo.webp",
+      linkedin: "https://www.linkedin.com/in/dean-stoecker-298010a",
     },
     {
       name: "Michael Morhaime",
       title: "Co-Founder & Former CEO, Blizzard Entertainment",
       img: "/michael-morhaime.jpeg",
       logo: "/blizzard-logo.png",
+      linkedin: "https://www.linkedin.com/in/mike-morhaime-1081a7170",
     },
     {
       name: "Timothy Li",
       title: "Founder & CEO, LendAPI",
       img: "/timothy-li.avif",
       logo: "/LendAPI.webp",
+      linkedin: "https://www.linkedin.com/in/timothytli",
     },
     {
       name: "Karni Baghdikian",
       title: "Former CMO, Ring",
       img: "/karni-baghdikian.jpeg",
       logo: "/ring.png",
+      linkedin: "https://www.linkedin.com/in/karnib",
     },
     {
       name: "Michael Yan",
       title: "Founder & CEO, Simplify",
       img: "/michael-yan.jpeg",
       logo: "/simplify.png",
+      linkedin: "https://www.linkedin.com/in/myan",
     },
   ]
 
@@ -66,6 +80,16 @@ export function PastSpeakersSection() {
               />
               <div className="text-slate-12 font-medium text-base md:text-lg">{s.name}</div>
               <div className="text-slate-10 text-sm md:text-base">{s.title}</div>
+              <a
+                href={s.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mx-auto mt-3 inline-flex items-center gap-1.5 rounded-full border border-slate-6 bg-slate-2 px-3 py-1.5 text-xs font-medium text-slate-11 transition-colors hover:border-slate-8 hover:bg-slate-3 hover:text-slate-12"
+                aria-label={`${s.name} on LinkedIn`}
+              >
+                <Linkedin className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                LinkedIn
+              </a>
               <img
                 src={s.logo || "/placeholder.svg"}
                 alt={`${s.name} company logo`}
