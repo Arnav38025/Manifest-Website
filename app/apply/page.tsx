@@ -1,76 +1,14 @@
-import { redirect } from "next/navigation"
-import { getSupabaseServer } from "@/lib/supabase/server"
-import { ApplyWizard } from "@/components/apply/wizard"
-import { LogoutButton } from "@/app/apply/ui"
+export const dynamic = "force-static"
 
-export const dynamic = "force-dynamic"
-
-export default async function ApplyPage() {
-  const supabase = await getSupabaseServer()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect("/auth")
-  }
-
-  // Fetch latest existing application or create a new draft for this user
-  const { data: existing, error: selectError } = await supabase
-    .from("applications")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle()
-
-  if (selectError) {
-    return (
-      <div className="max-w-2xl mx-auto p-6">
-        Failed to load your application: {selectError.message}
-      </div>
-    )
-  }
-
-  let appRow = existing
-  if (!existing) {
-    const { data: inserted, error: insertError } = await supabase
-      .from("applications")
-      .insert({ user_id: user.id, email: user.email })
-      .select("*")
-      .single()
-    if (insertError) {
-      return (
-        <div className="max-w-2xl mx-auto p-6">
-          Couldn't initialize your application: {insertError.message}
-        </div>
-      )
-    }
-    appRow = inserted
-  }
-
+export default function ApplyPage() {
   return (
-    <>
-      <div className="max-w-4xl mx-auto pt-6 px-5 flex justify-end">
-        <LogoutButton />
+    <div className="mx-auto flex min-h-[50vh] max-w-3xl items-center justify-center px-5 py-16">
+      <div className="w-full rounded-2xl border border-slate-6 bg-slate-2 p-8 text-center">
+        <h1 className="text-2xl font-medium text-slate-12">Apply Flow Disabled</h1>
+        <p className="mt-3 text-sm text-slate-11">
+          This route is temporarily disabled for static deployment (backend/Supabase required).
+        </p>
       </div>
-      <ApplyWizard
-        initialData={{
-          id: appRow!.id as any,
-          name: appRow?.name ?? "",
-          email: appRow?.email ?? user.email ?? "",
-          year: appRow?.year ?? "",
-          focus: appRow?.focus ?? "",
-          teamSize: appRow?.team_size ?? "",
-          brief: appRow?.brief ?? "",
-          problem: appRow?.problem ?? "",
-          progress: appRow?.progress ?? "",
-          links: appRow?.links ?? "",
-          applyElevate: Boolean((appRow as any)?.apply_elevate) ?? false,
-          elevateVideo: ((appRow as any)?.elevate_video as string) ?? "",
-          submitted: Boolean(appRow?.submitted_at),
-        }}
-      />
-    </>
+    </div>
   )
 }
