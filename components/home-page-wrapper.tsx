@@ -12,10 +12,10 @@ export function HomePageWrapper({ children }: { children: ReactNode }) {
       <HomeMotionBackground />
       <motion.div
         className="relative z-10"
-        initial={{ opacity: reduce ? 1 : 0, y: reduce ? 0 : 32 }}
+        initial={{ opacity: reduce ? 1 : 0, y: reduce ? 0 : 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
-          duration: reduce ? 0 : 1.45,
+          duration: reduce ? 0 : 0.65,
           ease: [0.16, 1, 0.3, 1],
         }}
       >

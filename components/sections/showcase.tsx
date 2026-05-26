@@ -65,8 +65,26 @@ function StartupSquareCard({
   )
 }
 
+function StartupGrid({
+  startups,
+  className,
+  startIndex = 0,
+}: {
+  startups: Startup[]
+  className?: string
+  startIndex?: number
+}) {
+  return (
+    <div className={cn("mx-auto grid w-full gap-3 sm:gap-5", className)}>
+      {startups.map((s, i) => (
+        <StartupSquareCard key={s.name} startup={s} index={startIndex + i} />
+      ))}
+    </div>
+  )
+}
+
 export function ShowcaseSection() {
-  const startups: Startup[] = [
+  const portfolioStartups: Startup[] = [
     {
       name: "Leprendo",
       badge: "Seed",
@@ -108,7 +126,7 @@ export function ShowcaseSection() {
       <div className="relative mx-auto max-w-7xl">
         <FadeIn>
           <div className="mb-10 text-center md:mb-12">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-10">Portfolio</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-10">Startups</p>
             <h2 className="mt-3 text-3xl font-medium tracking-tight text-slate-12 sm:text-4xl md:text-5xl">Startups</h2>
             <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-11 md:text-lg">
               Wins from the community—built at UCI, launched to the world.
@@ -116,11 +134,16 @@ export function ShowcaseSection() {
           </div>
         </FadeIn>
 
-        <div className="mx-auto grid w-full max-w-5xl grid-cols-2 gap-3 sm:max-w-none sm:gap-5 lg:mx-0 lg:max-w-7xl lg:grid-cols-4 lg:gap-5">
-          {startups.map((s, i) => (
-            <StartupSquareCard key={s.name} startup={s} index={i} />
-          ))}
-        </div>
+        <FadeIn>
+          <div className="mb-6 space-y-2 md:mb-8">
+            <h3 className="text-center text-xl font-medium tracking-tight text-slate-12 md:text-2xl">Portfolio</h3>
+            <p className="text-center text-sm text-slate-11 md:text-base">Funded alumni from the community.</p>
+          </div>
+        </FadeIn>
+        <StartupGrid
+          startups={portfolioStartups}
+          className="max-w-5xl grid-cols-2 sm:max-w-none lg:max-w-7xl lg:grid-cols-4"
+        />
       </div>
     </section>
   )

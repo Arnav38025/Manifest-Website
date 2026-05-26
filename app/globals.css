@@ -88,7 +88,8 @@
 
 html,
 body {
-  background-color: theme("colors.slate.12");
+  background-color: theme("colors.slate.1");
+  color: theme("colors.slate.12");
 }
 
 /* Only add padding when the body has a scrollbar */
@@ -267,6 +268,16 @@ body:has(html:not(:last-child)) {
     background-size: 280% 280%;
     animation: board-aurora-shift 32s ease-in-out infinite;
     animation-delay: -8s;
+  }
+
+  /* Past ~62vh scroll: stop painting/decoding the fixed hero stack. */
+  .hero-bg-past-fold {
+    visibility: hidden;
+  }
+
+  .hero-bg-past-fold .hero-mesh-a,
+  .hero-bg-past-fold .hero-mesh-b {
+    animation-play-state: paused;
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -4,6 +4,7 @@ import { useReducedMotion } from "framer-motion"
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react"
 
 const VIDEO_PLAYBACK_RATE = 0.5
+const OPACITY_EPSILON = 0.012
 
 function meshBlendFromScroll(): number {
   if (typeof window === "undefined") return 0
@@ -18,27 +19,55 @@ function meshBlendFromScroll(): number {
 
 /**
  * Home: video ↔ CSS gradient mesh crossfade. Scroll only touches refs + rAF (no React state).
- * Mesh is pure CSS — no WebGL — so scrolling stays smooth on laptops.
+ * Past the hero fold we pause video + mesh animation to keep scrolling smooth.
  */
 export function HomeMotionBackground() {
   const reduce = useReducedMotion()
 
+  const rootRef = useRef<HTMLDivElement>(null)
   const videoWrapRef = useRef<HTMLDivElement>(null)
   const meshWrapRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const rafRef = useRef(0)
-  /** Hysteresis so small scroll jitter doesn’t alternate play/pause (which rejects play() mid-flight). */
   const videoPlayIntentRef = useRef(true)
+  const pastHeroRef = useRef(false)
+  const lastVideoAlphaRef = useRef(-1)
+  const lastMeshAlphaRef = useRef(-1)
+
+  const setPastHero = useCallback((past: boolean) => {
+    if (pastHeroRef.current === past) return
+    pastHeroRef.current = past
+    const root = rootRef.current
+    if (!root) return
+    root.classList.toggle("hero-bg-past-fold", past)
+    const v = videoRef.current
+    if (v && past && !v.paused) v.pause()
+  }, [])
 
   const tick = useCallback(() => {
     rafRef.current = 0
+
+    const vh = window.innerHeight
+    if (window.scrollY > vh * 0.62) {
+      setPastHero(true)
+      return
+    }
+    setPastHero(false)
+
     const t = meshBlendFromScroll()
     const videoAlpha = 1 - t
 
-    const vWrap = videoWrapRef.current
-    const mWrap = meshWrapRef.current
-    if (vWrap) vWrap.style.opacity = String(videoAlpha)
-    if (mWrap) mWrap.style.opacity = String(t)
+    if (
+      Math.abs(videoAlpha - lastVideoAlphaRef.current) > OPACITY_EPSILON ||
+      Math.abs(t - lastMeshAlphaRef.current) > OPACITY_EPSILON
+    ) {
+      lastVideoAlphaRef.current = videoAlpha
+      lastMeshAlphaRef.current = t
+      const vWrap = videoWrapRef.current
+      const mWrap = meshWrapRef.current
+      if (vWrap) vWrap.style.opacity = String(videoAlpha)
+      if (mWrap) mWrap.style.opacity = String(t)
+    }
 
     const v = videoRef.current
     if (v) {
@@ -49,14 +78,12 @@ export function HomeMotionBackground() {
 
       if (intent) {
         v.playbackRate = VIDEO_PLAYBACK_RATE
-        if (v.paused) {
-          void v.play().catch(() => {})
-        }
+        if (v.paused) void v.play().catch(() => {})
       } else if (!v.paused) {
         v.pause()
       }
     }
-  }, [])
+  }, [setPastHero])
 
   const schedule = useCallback(() => {
     if (rafRef.current) return
@@ -89,10 +116,11 @@ export function HomeMotionBackground() {
 
   return (
     <div
+      ref={rootRef}
       className="pointer-events-none fixed inset-0 z-0 isolate overflow-hidden [transform:translateZ(0)]"
       aria-hidden
     >
-      <div ref={videoWrapRef} className="absolute inset-0 will-change-[opacity]" style={{ opacity: 1 }}>
+      <div ref={videoWrapRef} className="absolute inset-0" style={{ opacity: 1 }}>
         <video
           ref={videoRef}
           autoPlay
@@ -110,7 +138,7 @@ export function HomeMotionBackground() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_100%_70%_at_50%_0%,rgb(30_58_138_/_0.25),transparent_55%)]" />
       </div>
 
-      <div ref={meshWrapRef} className="absolute inset-0 will-change-[opacity]" style={{ opacity: 0 }}>
+      <div ref={meshWrapRef} className="absolute inset-0" style={{ opacity: 0 }}>
         <div
           className="hero-mesh-a absolute inset-[-18%] opacity-[0.9]"
           style={{

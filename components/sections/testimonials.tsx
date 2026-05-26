@@ -60,9 +60,19 @@ export function TestimonialsSection() {
       },
       achievements: ["Founder @ Manifest Five", "Co-Founder @ Magic 8"],
     },
+    {
+      name: "Shouryaa Sharma",
+      role: "",
+      year: "",
+      major: "",
+      bio: "",
+      image: "/shouryaa.jpeg",
+      socials: {},
+      achievements: ["Former President @ Manifest", "Partner @ Crater Ventures"],
+    },
   ]
 
-  
+  const centerLastRowPair = boardMembers.length % 3 === 2
 
   return (
     <section className="py-16 md:py-24 px-5 bg-slate-2 relative overflow-hidden">
@@ -110,7 +120,7 @@ export function TestimonialsSection() {
             <motion.div
               key={member.name}
               className={`group bg-slate-1 rounded-3xl p-5 md:p-6 border border-slate-6 hover:border-slate-8 transition-all duration-300 cursor-pointer relative overflow-hidden md:col-span-2 ${
-                index === boardMembers.length - 2 ? "md:col-start-2" : ""
+                centerLastRowPair && index === boardMembers.length - 2 ? "md:col-start-2" : ""
               }`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

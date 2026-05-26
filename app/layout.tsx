@@ -33,7 +33,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.className} min-h-svh max-w-screen bg-gradient-to-b from-[#0a1628] via-slate-12 to-[#020617] text-slate-12 antialiased`}
+        className={`${geistSans.className} min-h-svh max-w-screen bg-gradient-to-b from-[#0a1628] via-[#0c1222] to-[#020617] text-slate-12 antialiased`}
       >
         <Providers defaultTheme="dark" forcedTheme="dark">
           <div className="relative flex min-h-screen w-full flex-col">
