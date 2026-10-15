@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import defaultColors from "tailwindcss/colors";
 
 const config: Config = {
   darkMode: ["class"],
@@ -40,6 +41,10 @@ const config: Config = {
       },
       white: "#ffffff",
       black: "#000000",
+      emerald: defaultColors.emerald,
+      amber: defaultColors.amber,
+      orange: defaultColors.orange,
+      red: defaultColors.red,
     },
     fontSize: {
       "2xs": [

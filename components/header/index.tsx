@@ -1,18 +1,21 @@
 "use client"
 import { NavbarLink, NavbarLinkBackground } from "./link"
 import { useState, useMemo, useEffect } from "react"
+import { usePathname } from "next/navigation"
 
 export const Header = () => {
   const navbar = {
     items: [
       { href: "/", _title: "Home" },
-      { href: "#speakers", _title: "Speakers" },
-      { href: "#startups", _title: "Startups" },
-      { href: "#events", _title: "Events" },
-      { href: "#board", _title: "Board" },
+      { href: "/#speakers", _title: "Speakers" },
+      { href: "/#startups", _title: "Startups" },
+      { href: "/#events", _title: "Events" },
+      { href: "/#board", _title: "Board" },
+      { href: "/portal", _title: "Portal" },
     ],
   }
 
+  const pathname = usePathname()
   const [activeHref, setActiveHref] = useState(navbar.items[0].href)
   const activeIndex = useMemo(() => navbar.items.findIndex(i => i.href === activeHref), [activeHref])
   
@@ -20,8 +23,11 @@ export const Header = () => {
   useEffect(() => {
     const setFromHash = () => {
       const { hash } = window.location
-      if (hash && navbar.items.some(i => i.href === hash)) {
-        setActiveHref(hash)
+      const hashHref = hash ? `/${hash}` : "/"
+      if (pathname === "/portal") {
+        setActiveHref("/portal")
+      } else if (hash && navbar.items.some(i => i.href === hashHref)) {
+        setActiveHref(hashHref)
       } else if (!hash) {
         setActiveHref(navbar.items[0].href)
       }
@@ -29,7 +35,7 @@ export const Header = () => {
     setFromHash()
     window.addEventListener('hashchange', setFromHash)
     return () => window.removeEventListener('hashchange', setFromHash)
-  }, [])
+  }, [pathname])
 
   return (
     <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 hidden md:block">

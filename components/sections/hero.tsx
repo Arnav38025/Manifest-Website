@@ -72,6 +72,15 @@ export function HeroSection() {
             >
               Learn More
             </motion.a>
+
+            <motion.a
+              href="/portal"
+              className="px-8 py-4 bg-[#d4a42a] text-[#0a1628] rounded-full font-semibold text-lg shadow-[0_12px_30px_rgba(212,164,42,0.28)] hover:bg-[#ecc94b] transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Member Portal
+            </motion.a>
           </div>
         </FadeIn>
       </div>

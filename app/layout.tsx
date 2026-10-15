@@ -1,6 +1,7 @@
 import type React from "react"
 import type { Viewport, Metadata } from "next"
 import { Geist } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
 import { Providers } from "@/context"
 import "./globals.css"
 
@@ -40,6 +41,7 @@ export default async function RootLayout({
             <main className="flex-1">{children}</main>
           </div>
         </Providers>
+        <Analytics />
       </body>
     </html>
   )

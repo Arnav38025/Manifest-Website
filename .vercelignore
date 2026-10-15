@@ -1,0 +1,11 @@
+.env*
+!.env.example
+.supabase-db-password
+.vercel
+.next
+node_modules
+.pnpm-store
+.orig-backup
+public/slideshow/.orig-backup
+supabase/.temp
+tsconfig.tsbuildinfo

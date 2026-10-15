@@ -26,7 +26,6 @@ const NEW_BOARD_HEADSHOTS: Record<string, string> = {
   "Arnav Saharan": "/newBoard/Arnav.jpg",
   "Sahil Kulkarni": "/newBoard/sahil.jpeg",
   "Brandon Yee": "/newBoard/brandon.jpeg",
-  "Aurelio Metta": "/newBoard/aurelio.jpeg",
 }
 
 /** Prefer `public/newBoard/*` for current board photos, fallback to legacy root image. */
@@ -133,7 +132,7 @@ const archivedMembers: Member[] = [
     socials: {
       linkedin: "https://www.linkedin.com/in/arnav-saharan-b94967211/",
     },
-    achievements: ["Currently building Krumbit", "Software Analyst @ Goldman Sachs"],
+    achievements: ["IB Software Intern @ Goldman Sachs", "Building Krumbit"],
   },
   {
     name: "Sahil Kulkarni",
@@ -153,7 +152,7 @@ const archivedMembers: Member[] = [
   },
   {
     name: "Brandon Yee",
-    role: "Co-VP of Internal",
+    role: "VP of Internal",
     year: "Sophomore",
     major: "CS + BIM",
     bio: "",
@@ -163,23 +162,6 @@ const archivedMembers: Member[] = [
         "https://www.linkedin.com/in/brandon-yee-5b4618324?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
     },
     achievements: ["APM @ ZotSun", "Team Lead @ CubeSat UCI"],
-  },
-  {
-    name: "Aurelio Metta",
-    role: "Co-VP of Internal",
-    year: "Freshman",
-    major: "Business Administration + Psychology",
-    bio: "",
-    image: boardHeadshot("Aurelio Metta"),
-    socials: {
-      linkedin: "https://www.linkedin.com/in/aureliometta",
-    },
-    achievements: [
-      "ItalianVisa Project Manager",
-      "PROTOTYPE Co-Founder",
-      "Indigo TCG Founder | 6-fig value @ 14y/o",
-      "ThoughtCentral Founder | 300k TikTok",
-    ],
   },
 ]
 
@@ -388,17 +370,18 @@ export function BoardSection() {
           </div>
         </FadeIn>
 
-        <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
+        <div className="mx-auto flex w-full max-w-7xl flex-wrap justify-center gap-8 md:gap-10">
           {roster.map((member, index) => {
             const cardKey = `${member.name}-${member.role}-${index}`
             return (
-              <MemberCard
-                key={cardKey}
-                member={member}
-                index={index}
-                expanded={openCardKey === cardKey}
-                onToggle={() => setOpenCardKey((prev) => (prev === cardKey ? null : cardKey))}
-              />
+              <div key={cardKey} className="w-full md:w-[calc((100%-5rem)/3)]">
+                <MemberCard
+                  member={member}
+                  index={index}
+                  expanded={openCardKey === cardKey}
+                  onToggle={() => setOpenCardKey((prev) => (prev === cardKey ? null : cardKey))}
+                />
+              </div>
             )
           })}
         </div>
